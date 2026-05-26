@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import { UserModel } from "../models/user.model.js";
+import { ensureDemoAssignments } from "../services/demo-seed.service.js";
 
 declare module "express-serve-static-core" {
   interface Request {
@@ -20,5 +21,6 @@ export async function mockAuth(req: Request, _res: Response, next: NextFunction)
   );
 
   req.userId = user.id;
+  await ensureDemoAssignments(user.id);
   next();
 }

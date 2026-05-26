@@ -5,17 +5,20 @@ import Link from "next/link";
 import { Logo } from "./logo";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useAssignmentStore } from "@/stores/assignment-store";
 
 const nav = [
   { label: "Home", icon: Grid2X2, href: "/" },
   { label: "My Groups", icon: BookOpen, href: "/" },
-  { label: "Assignments", icon: FileText, href: "/", active: true, count: 10 },
+  { label: "Assignments", icon: FileText, href: "/", active: true },
   { label: "AI Teacher's Toolkit", icon: Sparkles, href: "/create" },
   { label: "My Library", icon: Library, href: "/" },
   { label: "Analytics", icon: BarChart3, href: "/analytics" }
 ];
 
 export function Sidebar() {
+  const assignmentCount = useAssignmentStore((state) => state.assignmentCount);
+
   return (
     <aside className="hidden w-[292px] shrink-0 p-4 lg:block">
       <div className="glass flex h-[calc(100vh-32px)] min-h-[700px] flex-col rounded-[24px] p-8">
@@ -37,7 +40,9 @@ export function Sidebar() {
             >
               <item.icon className="h-5 w-5" />
               <span className="min-w-0 flex-1">{item.label}</span>
-              {item.count ? <span className="rounded-full bg-[#ff642a] px-3 py-0.5 text-xs text-white">{item.count}</span> : null}
+              {item.label === "Assignments" && assignmentCount > 0 ? (
+                <span className="rounded-full bg-[#ff642a] px-3 py-0.5 text-xs text-white">{assignmentCount}</span>
+              ) : null}
             </Link>
           ))}
         </nav>

@@ -43,13 +43,17 @@ export async function create(req: Request, res: Response) {
 }
 
 export async function list(req: Request, res: Response) {
-  const assignments = await repo.listAssignments(
-    req.userId!,
-    String(req.query.search ?? ""),
-    req.query.status ? String(req.query.status) : undefined
-  );
+  const [assignments, totalCount] = await Promise.all([
+    repo.listAssignments(
+      req.userId!,
+      String(req.query.search ?? ""),
+      req.query.status ? String(req.query.status) : undefined
+    ),
+    repo.countAssignments(req.userId!)
+  ]);
 
   res.json({
+    totalCount,
     assignments: assignments.map((assignment) => ({
       id: String(assignment._id),
       title: assignment.title,

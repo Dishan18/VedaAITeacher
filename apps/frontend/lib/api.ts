@@ -18,5 +18,7 @@ export function pdfUrl(path?: string) {
 }
 
 export async function fetchAssignments(search = "", status = "all") {
-  return api<{ assignments: AssignmentSummary[] }>(`/assignments?search=${encodeURIComponent(search)}&status=${status}`);
+  return api<{ assignments: AssignmentSummary[]; totalCount: number }>(
+    `/assignments?search=${encodeURIComponent(search)}&status=${status}`
+  );
 }

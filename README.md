@@ -27,6 +27,17 @@ Backend: `http://localhost:4000/api/health`
 
 If `OPENAI_API_KEY` is absent, the worker uses a deterministic structured fallback so the end-to-end flow still works locally. With an API key, responses are requested as JSON only and parsed into the shared `GeneratedPaper` schema before rendering.
 
+The frontend dev script clears `.next` before starting. This avoids stale Next.js vendor chunk errors when switching between production builds and the dev server.
+
+## Demo Data
+
+The backend seeds two completed example assignments for the mock teacher when a fresh MongoDB database is first accessed:
+
+- `Quiz on Electricity`
+- `English Grammar Practice`
+
+Each demo assignment includes generated paper JSON and a server-side PDF, so the dashboard can show the filled assignment state immediately after the first API request.
+
 ## Docker
 
 ```bash

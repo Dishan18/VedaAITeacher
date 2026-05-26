@@ -9,6 +9,7 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
 import { Button } from "@/components/ui/button";
 import { api, pdfUrl } from "@/lib/api";
+import { demoAssignments, demoPapers } from "@/lib/demo-data";
 import { useAssignmentSocket } from "@/hooks/use-assignment-socket";
 import { useAssignmentStore } from "@/stores/assignment-store";
 
@@ -24,7 +25,23 @@ export default function AssignmentOutputPage() {
   useAssignmentSocket(params.id);
 
   useEffect(() => {
-    const load = () => api<AssignmentResponse>(`/assignments/${params.id}`).then(setData).catch(() => setData(null));
+    const load = () =>
+      api<AssignmentResponse>(`/assignments/${params.id}`).then(setData).catch(() => {
+        const demoAssignment = demoAssignments.find((assignment) => assignment.id === params.id);
+        const demoPaper = demoPapers[params.id];
+        setData(
+          demoAssignment && demoPaper
+            ? {
+                assignment: {
+                  _id: demoAssignment.id,
+                  title: demoAssignment.title,
+                  status: demoAssignment.status
+                },
+                paper: { paper: demoPaper }
+              }
+            : null
+        );
+      });
     load();
     const timer = setInterval(load, 2500);
     return () => clearInterval(timer);

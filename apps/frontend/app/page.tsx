@@ -11,6 +11,7 @@ import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { demoAssignments } from "@/lib/demo-data";
 import { fetchAssignments } from "@/lib/api";
 import { useAssignmentSocket } from "@/hooks/use-assignment-socket";
 import { useAssignmentStore } from "@/stores/assignment-store";
@@ -27,8 +28,15 @@ export default function DashboardPage() {
     const timer = setTimeout(() => {
       setLoading(true);
       fetchAssignments(search, filter)
-        .then((data) => setAssignments(data.assignments))
-        .catch(() => setAssignments([]))
+        .then((data) => setAssignments(data.assignments, data.totalCount))
+        .catch(() => {
+          const filtered = demoAssignments.filter((assignment) => {
+            const matchesSearch = assignment.title.toLowerCase().includes(search.toLowerCase());
+            const matchesFilter = filter === "all" || assignment.status === filter;
+            return matchesSearch && matchesFilter;
+          });
+          setAssignments(filtered, demoAssignments.length);
+        })
         .finally(() => setLoading(false));
     }, 220);
     return () => clearTimeout(timer);

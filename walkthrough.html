@@ -409,6 +409,14 @@ npm run dev:frontend</code></pre>
               Backend health: <code>http://localhost:4000/api/health</code>.
             </p>
           </div>
+          <div class="callout" style="margin-top: 16px">
+            <strong>Demo assignments</strong>
+            <p>
+              On a fresh MongoDB database, the mock teacher is automatically seeded with
+              <code>Quiz on Electricity</code> and <code>English Grammar Practice</code> the first time the authenticated
+              API is accessed. Both examples include generated paper JSON and server-side PDFs.
+            </p>
+          </div>
         </section>
 
         <section id="apps">
@@ -559,6 +567,10 @@ npm run dev:frontend</code></pre>
                 <td>Updates assignment status, writes job logs, and emits Socket.IO progress events.</td>
               </tr>
               <tr>
+                <td><code>apps/backend/src/services/demo-seed.service.ts</code></td>
+                <td>Creates two completed example assignments for a fresh mock-teacher database, including generated paper JSON and PDFs.</td>
+              </tr>
+              <tr>
                 <td><code>apps/backend/src/socket/realtime.ts</code></td>
                 <td>Initializes Socket.IO rooms and publishes assignment-specific realtime events.</td>
               </tr>
@@ -569,6 +581,10 @@ npm run dev:frontend</code></pre>
               <tr>
                 <td><code>apps/backend/src/config/*</code></td>
                 <td>Environment parsing, MongoDB connection, and Redis connection setup.</td>
+              </tr>
+              <tr>
+                <td><code>apps/backend/src/middleware/auth.ts</code></td>
+                <td>Provides mock teacher authentication and invokes the demo seed service for empty teacher accounts.</td>
               </tr>
             </tbody>
           </table>

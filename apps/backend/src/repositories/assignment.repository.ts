@@ -28,6 +28,10 @@ export async function listAssignments(userId: string, search = "", status?: stri
   return AssignmentModel.find(query).sort({ createdAt: -1 }).lean();
 }
 
+export async function countAssignments(userId: string) {
+  return AssignmentModel.countDocuments({ userId });
+}
+
 export async function getAssignmentWithPaper(id: string, userId: string) {
   const assignment = await AssignmentModel.findOne({ _id: id, userId }).lean();
   if (!assignment) return null;
