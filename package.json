@@ -1,0 +1,22 @@
+{
+  "name": "vedaai",
+  "private": true,
+  "version": "1.0.0",
+  "description": "VedaAI AI assessment creator monorepo",
+  "scripts": {
+    "dev": "npm run dev --workspace @vedaai/frontend",
+    "dev:frontend": "npm run dev --workspace @vedaai/frontend",
+    "dev:backend": "npm run dev --workspace @vedaai/backend",
+    "build": "npm run build --workspaces",
+    "lint": "npm run lint --workspaces",
+    "typecheck": "npm run typecheck --workspaces",
+    "start": "npm run start --workspace @vedaai/backend"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20.11.0"
+  }
+}
