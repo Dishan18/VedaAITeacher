@@ -2,6 +2,8 @@
 
 VedaAI is a production-oriented AI assessment creator for teachers. It uses a Next.js 15 App Router frontend, an Express/TypeScript backend, MongoDB, Redis, BullMQ workers, Socket.IO realtime progress, structured AI generation, and server-side PDF export.
 
+For a fuller guided walkthrough of setup, main file purposes, and the complete frontend-to-backend generation pipeline, open `walkthrough.html` in the project root.
+
 ## Monorepo
 
 - `apps/frontend`: Next.js 15, Tailwind CSS, Zustand, React Hook Form, Zod, Socket.IO client, Framer Motion, local shadcn-style primitives.

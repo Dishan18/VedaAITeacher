@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VedaAI Walkthrough</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #eeeeee;
+        --panel: #ffffff;
+        --ink: #222222;
+        --muted: #6f6f6f;
+        --line: #dddddd;
+        --black: #171717;
+        --orange: #ff672f;
+        --orange-soft: #fff0e9;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at top, rgba(255, 255, 255, 0.96), rgba(222, 222, 222, 0.9) 44%, #d2d2d2),
+          var(--bg);
+        color: var(--ink);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+        line-height: 1.55;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      .shell {
+        display: grid;
+        grid-template-columns: 300px minmax(0, 1fr);
+        gap: 24px;
+        min-height: 100vh;
+        padding: 24px;
+      }
+
+      aside {
+        position: sticky;
+        top: 24px;
+        height: calc(100vh - 48px);
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.78);
+        box-shadow: 0 26px 80px rgba(0, 0, 0, 0.14);
+        backdrop-filter: blur(18px);
+        padding: 28px;
+        overflow: auto;
+      }
+
+      main {
+        min-width: 0;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 34px;
+      }
+
+      .mark {
+        display: grid;
+        place-items: center;
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        color: white;
+        font-size: 24px;
+        font-weight: 900;
+        background: linear-gradient(135deg, #ff8a3d, #242424 56%, #111111);
+        box-shadow: 0 16px 26px rgba(255, 103, 47, 0.22);
+      }
+
+      .brand strong {
+        font-size: 26px;
+        letter-spacing: 0;
+      }
+
+      nav {
+        display: grid;
+        gap: 8px;
+      }
+
+      nav a {
+        display: block;
+        border-radius: 12px;
+        padding: 10px 12px;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      nav a:hover {
+        background: #f3f3f3;
+        color: var(--ink);
+      }
+
+      .hero {
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.76);
+        box-shadow: 0 26px 80px rgba(0, 0, 0, 0.14);
+        backdrop-filter: blur(18px);
+        padding: 36px;
+        margin-bottom: 24px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 999px;
+        background: var(--orange-soft);
+        color: #d94d18;
+        padding: 8px 13px;
+        font-weight: 900;
+        font-size: 13px;
+      }
+
+      .dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: var(--orange);
+      }
+
+      h1 {
+        max-width: 900px;
+        margin: 18px 0 10px;
+        font-size: clamp(34px, 5vw, 62px);
+        line-height: 1.02;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        margin: 0 0 16px;
+        font-size: 26px;
+        letter-spacing: 0;
+      }
+
+      h3 {
+        margin: 0 0 8px;
+        font-size: 18px;
+      }
+
+      p {
+        margin: 0;
+      }
+
+      .lead {
+        max-width: 850px;
+        color: var(--muted);
+        font-size: 18px;
+      }
+
+      section {
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.78);
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.09);
+        padding: 28px;
+        margin-bottom: 24px;
+      }
+
+      .grid {
+        display: grid;
+        gap: 16px;
+      }
+
+      .grid.two {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid.three {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: #fff;
+        padding: 18px;
+      }
+
+      .card strong {
+        display: block;
+        margin-bottom: 5px;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .step {
+        display: grid;
+        grid-template-columns: 38px minmax(0, 1fr);
+        gap: 14px;
+        padding: 16px 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .step:first-child {
+        border-top: 0;
+        padding-top: 0;
+      }
+
+      .num {
+        display: grid;
+        place-items: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: var(--black);
+        color: white;
+        font-weight: 900;
+      }
+
+      code,
+      pre {
+        font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      }
+
+      pre {
+        overflow: auto;
+        border-radius: 18px;
+        background: #181818;
+        color: #f7f7f7;
+        padding: 18px;
+        margin: 14px 0 0;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+      }
+
+      code {
+        border-radius: 7px;
+        background: #f1f1f1;
+        padding: 2px 6px;
+        font-size: 0.92em;
+      }
+
+      pre code {
+        background: transparent;
+        padding: 0;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+        border-radius: 18px;
+        background: #fff;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--line);
+        padding: 13px 14px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        background: #f8f8f8;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        background: #f2f2f2;
+        padding: 5px 10px;
+        color: #555;
+        font-size: 12px;
+        font-weight: 800;
+        margin: 3px 4px 3px 0;
+      }
+
+      .pipeline {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(130px, 1fr));
+        gap: 10px;
+        overflow-x: auto;
+        padding-bottom: 6px;
+      }
+
+      .pipe {
+        min-height: 116px;
+        border-radius: 18px;
+        background: #fff;
+        border: 1px solid var(--line);
+        padding: 14px;
+      }
+
+      .pipe b {
+        display: block;
+        margin-bottom: 6px;
+      }
+
+      .callout {
+        border: 1px solid rgba(255, 103, 47, 0.28);
+        border-radius: 20px;
+        background: var(--orange-soft);
+        padding: 18px;
+      }
+
+      .footer {
+        color: var(--muted);
+        padding: 10px 4px 34px;
+      }
+
+      @media (max-width: 980px) {
+        .shell {
+          grid-template-columns: 1fr;
+          padding: 14px;
+        }
+
+        aside {
+          position: static;
+          height: auto;
+        }
+
+        .grid.two,
+        .grid.three {
+          grid-template-columns: 1fr;
+        }
+
+        .hero,
+        section {
+          padding: 22px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <aside>
+        <div class="brand">
+          <div class="mark">V</div>
+          <strong>VedaAI</strong>
+        </div>
+        <nav aria-label="Walkthrough navigation">
+          <a href="#quick-start">Quick Start</a>
+          <a href="#apps">Apps And Packages</a>
+          <a href="#frontend">Frontend File Purpose</a>
+          <a href="#backend">Backend File Purpose</a>
+          <a href="#workflow">Workflow And Pipeline</a>
+          <a href="#ai">AI Contract</a>
+          <a href="#docker">Docker And Deployment</a>
+          <a href="#checks">Verification</a>
+        </nav>
+      </aside>
+
+      <main>
+        <header class="hero">
+          <span class="eyebrow"><span class="dot"></span>Project walkthrough</span>
+          <h1>Setup, file map, and full AI assessment generation pipeline.</h1>
+          <p class="lead">
+            This guide explains how to run the VedaAI frontend and backend, what each main file does, and how an
+            assignment moves from teacher input to structured AI output, realtime status updates, MongoDB persistence,
+            and printable PDF export.
+          </p>
+        </header>
+
+        <section id="quick-start">
+          <h2>Quick Start</h2>
+          <div class="grid two">
+            <div class="card">
+              <h3>1. Install dependencies</h3>
+              <p class="muted">Run this once from the repository root.</p>
+              <pre><code>npm install</code></pre>
+            </div>
+            <div class="card">
+              <h3>2. Create env files</h3>
+              <p class="muted">Copy the examples and fill in secrets such as the OpenAI key.</p>
+              <pre><code>copy apps\backend\.env.example apps\backend\.env
+copy apps\frontend\.env.example apps\frontend\.env.local</code></pre>
+            </div>
+            <div class="card">
+              <h3>3. Start MongoDB and Redis</h3>
+              <p class="muted">The backend uses MongoDB for durable records and Redis for BullMQ job state.</p>
+              <pre><code>docker compose up mongo redis</code></pre>
+            </div>
+            <div class="card">
+              <h3>4. Run the app processes</h3>
+              <p class="muted">Use three terminals so the API, worker, and UI stay alive together.</p>
+              <pre><code>npm run dev:backend
+npm run worker --workspace @vedaai/backend
+npm run dev:frontend</code></pre>
+            </div>
+          </div>
+          <div class="callout" style="margin-top: 16px">
+            <strong>Local URLs</strong>
+            <p>
+              Frontend: <code>http://localhost:3000</code> or the fallback port shown by Next.js.
+              Backend health: <code>http://localhost:4000/api/health</code>.
+            </p>
+          </div>
+        </section>
+
+        <section id="apps">
+          <h2>Apps And Packages</h2>
+          <div class="grid three">
+            <div class="card">
+              <strong><code>apps/frontend</code></strong>
+              <p class="muted">
+                Next.js 15 App Router UI. Contains the teacher dashboard, assignment creator, generated paper view,
+                analytics dashboard, shared layout, API client, Zustand store, and realtime socket hook.
+              </p>
+            </div>
+            <div class="card">
+              <strong><code>apps/backend</code></strong>
+              <p class="muted">
+                Express API and BullMQ worker. Handles authentication mock, validation, uploads, extraction, structured
+                AI generation, MongoDB persistence, Socket.IO events, and PDF generation.
+              </p>
+            </div>
+            <div class="card">
+              <strong><code>packages/shared-types</code></strong>
+              <p class="muted">
+                Shared TypeScript contracts used by both apps, including job statuses, question types, assignment
+                payloads, realtime events, and the generated paper schema.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="frontend">
+          <h2>Frontend File Purpose</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>File</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>apps/frontend/app/page.tsx</code></td>
+                <td>Main assignments dashboard with loading, empty, search/filter, filled cards, mobile nav, and live progress toast.</td>
+              </tr>
+              <tr>
+                <td><code>apps/frontend/app/create/page.tsx</code></td>
+                <td>Assignment creation flow with file upload, manual source text, dynamic question rows, totals, autosave draft, and Zod validation.</td>
+              </tr>
+              <tr>
+                <td><code>apps/frontend/app/assignments/[id]/page.tsx</code></td>
+                <td>Generated exam-paper output page. Shows realtime generation progress until the paper is complete, then renders printable academic layout and PDF download.</td>
+              </tr>
+              <tr>
+                <td><code>apps/frontend/app/analytics/page.tsx</code></td>
+                <td>Bonus analytics dashboard with usage metrics and template performance visuals.</td>
+              </tr>
+              <tr>
+                <td><code>apps/frontend/components/layout/*</code></td>
+                <td>Reusable product shell: logo, sidebar, topbar, and mobile bottom navigation matching the grayscale/orange Figma direction.</td>
+              </tr>
+              <tr>
+                <td><code>apps/frontend/components/assignments/*</code></td>
+                <td>Assignment UI pieces: cards, empty state illustration, dropdown actions, and animated progress notification.</td>
+              </tr>
+              <tr>
+                <td><code>apps/frontend/components/ui/*</code></td>
+                <td>Small shadcn-style primitives used by the product screens, currently button and input/textarea controls.</td>
+              </tr>
+              <tr>
+                <td><code>apps/frontend/lib/api.ts</code></td>
+                <td>API abstraction for backend requests and generated PDF URL normalization.</td>
+              </tr>
+              <tr>
+                <td><code>apps/frontend/lib/socket.ts</code></td>
+                <td>Socket.IO client configured with the public socket URL.</td>
+              </tr>
+              <tr>
+                <td><code>apps/frontend/hooks/use-assignment-socket.ts</code></td>
+                <td>Subscribes to assignment progress events and stores updates in Zustand.</td>
+              </tr>
+              <tr>
+                <td><code>apps/frontend/stores/assignment-store.ts</code></td>
+                <td>Zustand store for assignment lists and the active realtime generation progress event.</td>
+              </tr>
+              <tr>
+                <td><code>apps/frontend/app/globals.css</code></td>
+                <td>Global Tailwind import, theme variables, body styling, glass surfaces, and paper shadow utility.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="backend">
+          <h2>Backend File Purpose</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>File</th>
+                <th>Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>apps/backend/src/server.ts</code></td>
+                <td>HTTP entry point. Creates the Express app, attaches Socket.IO, connects MongoDB, and starts the server.</td>
+              </tr>
+              <tr>
+                <td><code>apps/backend/src/app.ts</code></td>
+                <td>Express middleware stack: Helmet, CORS, rate limiting, JSON parsing, request logging, API routes, static PDF serving, and error handling.</td>
+              </tr>
+              <tr>
+                <td><code>apps/backend/src/routes.ts</code></td>
+                <td>API route registry for health, mock profile, assignment CRUD, duplicate, regenerate, and file upload handling.</td>
+              </tr>
+              <tr>
+                <td><code>apps/backend/src/controllers/assignment.controller.ts</code></td>
+                <td>Request handlers that validate inputs, create/list/view/delete assignments, duplicate assignments, and enqueue generation jobs.</td>
+              </tr>
+              <tr>
+                <td><code>apps/backend/src/repositories/assignment.repository.ts</code></td>
+                <td>Database access layer for creating assignments, listing teacher assignments, and loading an assignment with its generated paper.</td>
+              </tr>
+              <tr>
+                <td><code>apps/backend/src/models/*.model.ts</code></td>
+                <td>Mongoose schemas for users, assignments, generated papers, and job logs.</td>
+              </tr>
+              <tr>
+                <td><code>apps/backend/src/workers/assignment.worker.ts</code></td>
+                <td>BullMQ worker that extracts text, generates structured AI JSON, stores results, creates PDF, and emits progress updates.</td>
+              </tr>
+              <tr>
+                <td><code>apps/backend/src/services/file-processing.service.ts</code></td>
+                <td>Extracts clean text from PDF, DOCX, TXT, and image uploads using <code>pdf-parse</code>, <code>mammoth</code>, and <code>tesseract.js</code>.</td>
+              </tr>
+              <tr>
+                <td><code>apps/backend/src/services/ai.service.ts</code></td>
+                <td>Builds the assessment prompt, enforces JSON-only AI output, calls OpenAI when configured, and provides a structured local fallback.</td>
+              </tr>
+              <tr>
+                <td><code>apps/backend/src/services/pdf.service.ts</code></td>
+                <td>Generates a server-side printable PDF using <code>pdf-lib</code>, including pagination, exam header, questions, and answer key.</td>
+              </tr>
+              <tr>
+                <td><code>apps/backend/src/services/queue.service.ts</code></td>
+                <td>Configures BullMQ queues for assignment generation and PDF generation backed by Redis.</td>
+              </tr>
+              <tr>
+                <td><code>apps/backend/src/services/progress.service.ts</code></td>
+                <td>Updates assignment status, writes job logs, and emits Socket.IO progress events.</td>
+              </tr>
+              <tr>
+                <td><code>apps/backend/src/socket/realtime.ts</code></td>
+                <td>Initializes Socket.IO rooms and publishes assignment-specific realtime events.</td>
+              </tr>
+              <tr>
+                <td><code>apps/backend/src/validators/assignment.validator.ts</code></td>
+                <td>Zod validation for assignment creation payloads, including question config constraints.</td>
+              </tr>
+              <tr>
+                <td><code>apps/backend/src/config/*</code></td>
+                <td>Environment parsing, MongoDB connection, and Redis connection setup.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="workflow">
+          <h2>Workflow And Pipeline</h2>
+          <div class="pipeline" aria-label="Assignment generation pipeline">
+            <div class="pipe">
+              <b>1. Teacher input</b>
+              <p class="muted">Frontend submits title, due date, files/manual text, question rows, marks, and instructions.</p>
+            </div>
+            <div class="pipe">
+              <b>2. API validation</b>
+              <p class="muted">Express validates the payload with Zod and creates a MongoDB assignment with status <code>queued</code>.</p>
+            </div>
+            <div class="pipe">
+              <b>3. Queue job</b>
+              <p class="muted">The assignment id is pushed into BullMQ so long AI work happens outside the request cycle.</p>
+            </div>
+            <div class="pipe">
+              <b>4. Text extraction</b>
+              <p class="muted">Worker extracts text from uploaded documents or uses manual text as source material.</p>
+            </div>
+            <div class="pipe">
+              <b>5. AI JSON</b>
+              <p class="muted">AI service requests structured JSON only and never renders raw LLM prose directly.</p>
+            </div>
+            <div class="pipe">
+              <b>6. PDF export</b>
+              <p class="muted">Generated paper is stored, then converted into a high-quality printable PDF.</p>
+            </div>
+            <div class="pipe">
+              <b>7. Realtime UI</b>
+              <p class="muted">Socket.IO emits progress so the dashboard and output page update live.</p>
+            </div>
+          </div>
+
+          <div style="margin-top: 22px">
+            <div class="step">
+              <div class="num">1</div>
+              <div>
+                <h3>Create assignment</h3>
+                <p class="muted">
+                  <code>apps/frontend/app/create/page.tsx</code> builds a <code>FormData</code> payload and sends it to
+                  <code>POST /api/assignments</code>.
+                </p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="num">2</div>
+              <div>
+                <h3>Persist and enqueue</h3>
+                <p class="muted">
+                  The controller stores an assignment, calculates total questions and marks, then calls
+                  <code>enqueueAssignmentGeneration</code>.
+                </p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="num">3</div>
+              <div>
+                <h3>Worker lifecycle statuses</h3>
+                <p>
+                  <span class="pill">queued</span>
+                  <span class="pill">processing</span>
+                  <span class="pill">generating_questions</span>
+                  <span class="pill">generating_answers</span>
+                  <span class="pill">creating_pdf</span>
+                  <span class="pill">completed</span>
+                  <span class="pill">failed</span>
+                </p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="num">4</div>
+              <div>
+                <h3>Frontend updates live</h3>
+                <p class="muted">
+                  <code>use-assignment-socket.ts</code> listens for <code>assignment:progress</code>. Zustand stores the
+                  latest event, and UI surfaces it through the progress toast and output page loader.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="ai">
+          <h2>AI Contract</h2>
+          <p class="muted">
+            VedaAI asks the model for strict structured JSON only. The frontend renders parsed fields from this object,
+            never raw model text. This keeps the exam-paper page predictable, printable, and safer to style.
+          </p>
+          <pre><code>{
+  "title": "Quiz on Electricity",
+  "subject": "Science",
+  "class": "8th",
+  "schoolName": "Delhi Public School, Sector-4, Bokaro",
+  "timeAllowedMinutes": 45,
+  "maximumMarks": 20,
+  "sections": [
+    {
+      "title": "Section A",
+      "instruction": "All questions are compulsory.",
+      "questions": [
+        {
+          "question": "Explain the purpose of electroplating.",
+          "difficulty": "easy",
+          "marks": 2,
+          "answer": "Electroplating deposits a layer of metal on another object using electric current.",
+          "type": "Short Questions"
+        }
+      ]
+    }
+  ]
+}</code></pre>
+        </section>
+
+        <section id="docker">
+          <h2>Docker And Deployment</h2>
+          <div class="grid two">
+            <div class="card">
+              <h3>Full local stack</h3>
+              <p class="muted">Starts MongoDB, Redis, backend API, worker, and frontend.</p>
+              <pre><code>docker compose up --build</code></pre>
+            </div>
+            <div class="card">
+              <h3>Deployment process split</h3>
+              <p class="muted">
+                In production, run the API and worker as separate processes so queue load does not block HTTP traffic.
+                Persist uploads/PDFs or replace local storage with S3-compatible object storage.
+              </p>
+            </div>
+          </div>
+          <div class="callout" style="margin-top: 16px">
+            <strong>Important environment values</strong>
+            <p>
+              <code>MONGODB_URI</code>, <code>REDIS_URL</code>, <code>OPENAI_API_KEY</code>,
+              <code>OPENAI_MODEL</code>, <code>FRONTEND_URL</code>, <code>NEXT_PUBLIC_API_URL</code>, and
+              <code>NEXT_PUBLIC_SOCKET_URL</code>.
+            </p>
+          </div>
+        </section>
+
+        <section id="checks">
+          <h2>Verification</h2>
+          <div class="grid two">
+            <div class="card">
+              <h3>Type checks</h3>
+              <pre><code>npm run typecheck --workspace @vedaai/backend
+npm run typecheck --workspace @vedaai/frontend</code></pre>
+            </div>
+            <div class="card">
+              <h3>Production builds</h3>
+              <pre><code>npm run build --workspace @vedaai/backend
+npm run build --workspace @vedaai/frontend</code></pre>
+            </div>
+          </div>
+          <div class="callout" style="margin-top: 16px">
+            <strong>Windows note</strong>
+            <p>
+              If PowerShell blocks <code>npm.ps1</code>, use <code>npm.cmd</code> for the same commands, for example
+              <code>npm.cmd run build --workspace @vedaai/frontend</code>.
+            </p>
+          </div>
+        </section>
+
+        <p class="footer">VedaAI walkthrough generated for the project root. Open this file directly in a browser.</p>
+      </main>
+    </div>
+  </body>
+</html>
