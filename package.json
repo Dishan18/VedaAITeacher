@@ -7,7 +7,7 @@
     "dev": "npm run dev --workspace @vedaai/frontend",
     "dev:frontend": "npm run dev --workspace @vedaai/frontend",
     "dev:backend": "npm run dev --workspace @vedaai/backend",
-    "build": "npm run build --workspaces",
+    "build": "npm run build --workspace @vedaai/shared-types && npm run build --workspace @vedaai/backend && npm run build --workspace @vedaai/frontend",
     "lint": "npm run lint --workspaces",
     "typecheck": "npm run typecheck --workspaces",
     "start": "npm run start --workspace @vedaai/backend"
