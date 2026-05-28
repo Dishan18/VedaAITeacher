@@ -10,7 +10,9 @@ import { createPaperPdf } from "../services/pdf.service.js";
 import { publishProgress } from "../services/progress.service.js";
 import { logger } from "../utils/logger.js";
 
+logger.info("Worker connecting to MongoDB...");
 await connectDatabase();
+logger.info("Worker database connection complete");
 
 function normalizeQuestionConfig(rows: unknown): QuestionConfigRow[] {
   return (rows as Array<{ id?: string; type: QuestionConfigRow["type"]; count: number; marks: number }>).map((row, index) => ({
@@ -21,9 +23,11 @@ function normalizeQuestionConfig(rows: unknown): QuestionConfigRow[] {
   }));
 }
 
-new Worker(
+logger.info("Initializing BullMQ Worker for assignment-generation queue...");
+const worker = new Worker(
   "assignment-generation",
   async (job) => {
+    logger.info(`[Worker] Started processing job ${job.id} for assignment ${job.data.assignmentId}`);
     const { assignmentId } = job.data as { assignmentId: string };
     const jobId = String(job.id);
     const assignment = await AssignmentModel.findById(assignmentId);
@@ -62,13 +66,25 @@ new Worker(
       status: "completed"
     });
     await publishProgress(assignmentId, jobId, "completed", 100, "Assessment ready");
+    logger.info(`[Worker] Successfully completed job ${job.id} for assignment ${job.data.assignmentId}`);
   },
   { connection: redis, concurrency: 3 }
-).on("failed", async (job, error) => {
-  logger.error(error);
-  if (job?.data.assignmentId) {
-    await publishProgress(job.data.assignmentId, String(job.id), "failed", 100, error.message);
-  }
+);
+
+worker.on("active", (job) => {
+  logger.info(`[Worker] Job ${job.id} became active`);
 });
 
-logger.info("Assignment worker started");
+worker.on("completed", (job) => {
+  logger.info(`[Worker] Job ${job.id} completed successfully`);
+});
+
+worker.on("failed", (job, error) => {
+  logger.error(`[Worker] Job ${job?.id} failed: ${error.message}`);
+});
+
+worker.on("error", (error) => {
+  logger.error(`[Worker] Error: ${error.message}`);
+});
+
+logger.info("Assignment worker started and listening for jobs");
